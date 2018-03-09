@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Gecko;
 using System.Windows.Forms.Integration;
-using System.Windows.Threading;
 
 namespace Gecko45WpfDemo
 {
@@ -23,7 +13,8 @@ namespace Gecko45WpfDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        WindowsFormsHost host;
+        private WindowsFormsHost host;
+        private GeckoWebBrowser browser;
 
         protected bool isDragging;
         private Point clickPosition;
@@ -39,10 +30,10 @@ namespace Gecko45WpfDemo
 
             Xpcom.Initialize("Firefox");
             host = new WindowsFormsHost();
-            GeckoWebBrowser browser = new GeckoWebBrowser();// { Dock = System.Windows.Forms.DockStyle.Fill };
+            browser = new GeckoWebBrowser();// { Dock = System.Windows.Forms.DockStyle.Fill };
             host.Child = browser;
+            // grid from xaml
             GridWeb.Children.Add(host);
-
             browser.Navigate("https://google.com");
         }
 
@@ -77,9 +68,11 @@ namespace Gecko45WpfDemo
                     draggableControl.RenderTransform = transform;
                 }
 
+                // how is this even working?!
                 transform.X = currentPosition.X - clickPosition.X;
                 transform.Y = currentPosition.Y - clickPosition.Y;
 
+                // this looks like the only way to update browser controll
                 host.InvalidateVisual();
             }
         }
@@ -87,11 +80,6 @@ namespace Gecko45WpfDemo
         private void btnMoveBrowser_Click(object sender, RoutedEventArgs e)
         {
             DraggableDock.SetValue(Canvas.LeftProperty, (double)DraggableDock.GetValue(Canvas.LeftProperty) + 10);
-        }
-
-        private void btnMoveText_Click(object sender, RoutedEventArgs e)
-        {
-            lblText.SetValue(Canvas.LeftProperty, (double) lblText.GetValue(Canvas.LeftProperty) + 10);
         }
     }
 }
