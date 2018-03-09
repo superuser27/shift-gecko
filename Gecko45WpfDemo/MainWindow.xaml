@@ -1,0 +1,31 @@
+﻿<Window x:Class="Gecko45WpfDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gecko45WpfDemo"
+        mc:Ignorable="d"
+        Title="Gecko45x64 WPF Demo" Height="350" Width="725">
+    <DockPanel>
+        <Button 
+            Content="Add new browser window" 
+            DockPanel.Dock="Bottom" 
+            Margin="20" 
+            Name="btnAddBrowser" 
+            Click="btnAddBrowser_Click"/>
+        
+        <Grid 
+            DockPanel.Dock="Top" 
+            Name="GridWeb">
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- control goes here-->
+        </Grid>
+    </DockPanel>
+</Window>
