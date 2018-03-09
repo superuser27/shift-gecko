@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Gecko;
 using System.Windows.Forms.Integration;
+using System.Windows.Threading;
 
 namespace Gecko45WpfDemo
 {
@@ -22,8 +23,10 @@ namespace Gecko45WpfDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isFirefoxInitialized = false;
-        private int instaces = 0;
+        WindowsFormsHost host;
+
+        protected bool isDragging;
+        private Point clickPosition;
 
         public MainWindow()
         {
@@ -32,21 +35,63 @@ namespace Gecko45WpfDemo
 
         private void btnAddBrowser_Click(object sender, RoutedEventArgs e)
         {
-            if (!isFirefoxInitialized)
-            {
-                Xpcom.Initialize("Firefox");
-                isFirefoxInitialized = true;
-            }
-            WindowsFormsHost host = new WindowsFormsHost();
-            GeckoWebBrowser browser = new GeckoWebBrowser();//{Dock = DockStyle.Fill};
+            btnAddBrowser.IsEnabled = false;
+
+            Xpcom.Initialize("Firefox");
+            host = new WindowsFormsHost();
+            GeckoWebBrowser browser = new GeckoWebBrowser();// { Dock = System.Windows.Forms.DockStyle.Fill };
             host.Child = browser;
-            Grid grid = new Grid();
-            grid.Children.Add(host);
-            GridWeb.Children.Add(grid);
-            Grid.SetRow(grid, 1);
-            Grid.SetColumn(grid, instaces++);
-            btnAddBrowser.Content += "*";
+            GridWeb.Children.Add(host);
+
             browser.Navigate("https://google.com");
+        }
+
+        private void DraggableDock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+            var draggableControl = sender as DockPanel;
+            clickPosition = e.GetPosition(this);
+            draggableControl.CaptureMouse();
+        }
+
+        private void DraggableDock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = false;
+            var draggable = sender as DockPanel;
+            draggable.ReleaseMouseCapture();
+            
+        }
+
+        private void DraggableDock_MouseMove(object sender, MouseEventArgs e)
+        {
+            var draggableControl = sender as DockPanel;
+
+            if (isDragging && draggableControl != null)
+            {
+                Point currentPosition = e.GetPosition(this.Parent as UIElement);
+
+                var transform = draggableControl.RenderTransform as TranslateTransform;
+                if (transform == null)
+                {
+                    transform = new TranslateTransform();
+                    draggableControl.RenderTransform = transform;
+                }
+
+                transform.X = currentPosition.X - clickPosition.X;
+                transform.Y = currentPosition.Y - clickPosition.Y;
+
+                host.InvalidateVisual();
+            }
+        }
+
+        private void btnMoveBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            DraggableDock.SetValue(Canvas.LeftProperty, (double)DraggableDock.GetValue(Canvas.LeftProperty) + 10);
+        }
+
+        private void btnMoveText_Click(object sender, RoutedEventArgs e)
+        {
+            lblText.SetValue(Canvas.LeftProperty, (double) lblText.GetValue(Canvas.LeftProperty) + 10);
         }
     }
 }

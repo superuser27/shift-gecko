@@ -4,28 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gecko45WpfDemo"
+        AllowsTransparency="True"
+        WindowStyle="None"
         mc:Ignorable="d"
-        Title="Gecko45x64 WPF Demo" Height="350" Width="725">
-    <DockPanel>
+        Title="Gecko45x64 WPF Demo" Height="450" Width="725">
+    <DockPanel Background="AliceBlue">
         <Button 
             Content="Add new browser window" 
             DockPanel.Dock="Bottom" 
             Margin="20" 
             Name="btnAddBrowser" 
-            Click="btnAddBrowser_Click"/>
-        
-        <Grid 
-            DockPanel.Dock="Top" 
-            Name="GridWeb">
-
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <!-- control goes here-->
-        </Grid>
+            Click="btnAddBrowser_Click" />
+        <Button 
+            Content="Move browser" 
+            DockPanel.Dock="Bottom" 
+            Margin="20" 
+            Name="btnMoveBrowser" 
+            Click="btnMoveBrowser_Click" />
+        <Button 
+            Content="Move text" 
+            DockPanel.Dock="Bottom" 
+            Margin="20" 
+            Name="btnMoveText" 
+            Click="btnMoveText_Click" />
+        <Canvas DockPanel.Dock="Top"
+                Name="FurureCanvas">
+            <DockPanel Name="DraggableDock"
+                       Canvas.Left="0"
+                       MouseLeftButtonDown="DraggableDock_MouseLeftButtonDown"
+                       MouseLeftButtonUp="DraggableDock_MouseLeftButtonUp"
+                       MouseMove="DraggableDock_MouseMove">
+                <Label DockPanel.Dock="Top" Margin="10">Drag me pls</Label>
+                <Grid Name="GridWeb"
+                      Margin="20"
+                      Width="250"
+                      Height="150"
+                      DockPanel.Dock="Bottom">
+                    <!-- control will be added here-->
+                </Grid>
+            </DockPanel>
+            <Label Name="lblText" Canvas.Left="0">THIS IS TEXT</Label>
+        </Canvas>
     </DockPanel>
 </Window>
